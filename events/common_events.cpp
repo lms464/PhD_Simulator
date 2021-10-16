@@ -1,9 +1,12 @@
-srand(time(NULL));
-int randNum(int min, int max) {
-	//the parameters must be min = 3, max = 3; 
-	int x = rand() % min +  max;
-	return x;
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+
+int randNum(int min, int max)
+{
+   return rand() % max + min;
 }
+
 
 int lab_meeting () {
 	int time = 1;
@@ -30,4 +33,12 @@ int research (int time) {
 		}
 	}
 	return time; 
+}
+
+int main() {
+	for (int i=0; i < 100 ; i++) {
+		std::cout<< randNum(0,3)<< std::endl;
+	}
+	return 0;
+
 }

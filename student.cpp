@@ -1,43 +1,6 @@
 #include <string>
 #include <iostream>
-
-
-class Student {
-// 	Student (std::string name, std::string program, int year, float day);
-	
-	private:
-		// variables
-		std::string name;
-		std::string program;
-		int graduation_year;
-		int max_hours_per_day;
-		int years_passed;
-		int day;
-		float time;
-		int burnout;
-		float productivity;
-		
-	public:
-		std::string set_name(std::string name);
-		std::string set_program(std::string program);
-		void init_graduation_year();
-		void init_max_working_hours();
-		int get_max_hours();
-		void init_year();
-		int get_year();
-		void update_year();
-		void init_days();
-		void update_days(float time);
-		void update_time(float time);
-		int get_days();
-		void init_time();
-		float check_time();
-		void init_burnout();
-		void update_burnout(int burn);
-		void update_burnout();
-		void check_burnout();
-		int get_burnout();
-};
+#include "student.h"
 
 void Student::init_graduation_year() {
 	graduation_year = 7;
@@ -104,23 +67,29 @@ void Student::check_burnout() {
 		Student::update_productivity(-0.1);
 	}
 	else if (burnout >= 90) {
-		Student::updateupdate_productivity(-1.0)
+		Student::update_productivity(-1.0);
 	}
-	if 
+	if (burnout >= 100) {
+		Student::update_days(max_hours_per_day);
+		burnout = 0;
+	}
 }
 
 void Student::init_productivity() {
 	productivity = 1;
 }
 
-
 void Student::update_productivity(float prod) {
-	productivity = productivity + prod
+	productivity = productivity + prod;
 	if (productivity > 1.0) {
 		productivity = 1.0;
 	} else if (productivity < -1.0) {
-		productivitiy = -1.0;
+		productivity = -1.0;
 	}
+}
+
+float Student::get_productivity() {
+	return productivity;
 }
 
 int main() {
@@ -129,17 +98,20 @@ int main() {
 	obj1.init_max_working_hours();
 	obj1.init_year();
 	obj1.init_time();
-	float local_time = 0;
+	int days = 0;
 	int max_time = obj1.get_max_hours();
-	
-	while (local_time <= max_time) {
-	
-		
-		local_time = local_time + 0.5;
-		obj1.update_time(local_time);
-		std::cout << "Current Time: " << 1.0 * obj1.check_time() << std::endl; 
+	while (days < 7) {
+		float local_time = 0;
+		while (local_time <= max_time) {
+
+			local_time = local_time + 0.5;
+			obj1.update_time(local_time);
+			std::cout << "Current Time: " << 1.0 * obj1.check_time() << std::endl; 
+			obj1.check_burnout();
+		}
+		obj1.update_days(local_time);
+		days = obj1.get_days();
+		std::cout << "Days Passed " << days << std::endl;
 	}
-	obj1.update_days(local_time);
-	std::cout << "Days Passed " << obj1.get_days() << std::endl;
 	return 0;
 }
