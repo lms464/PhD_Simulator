@@ -14,8 +14,8 @@ class Student {
 		int years_passed = 0;
 		int day = 0;
 		float time = 0.0;
-		int burnout = 0;
-		float productivity = 1;
+		int burnout = 0; //HP
+		float productivity = 1; //MP
 		
 	public:
 		void set_name(std::string name);

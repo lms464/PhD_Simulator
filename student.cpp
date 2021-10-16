@@ -3,6 +3,8 @@
 #include "student.h"
 
 
+// functions for student
+
 void Student::set_name(std::string name_in) {
 	name = name_in;
 }
@@ -64,7 +66,7 @@ void Student::init_time() {
 	time = 0.0;
 };
 void Student::update_time(float loc_time) {
-	time = loc_time;
+	time = time + loc_time;
 }
 
 void Student::update_burnout(int burn) {
