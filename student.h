@@ -15,11 +15,13 @@ class Student {
 		int day = 0;
 		float time = 0.0;
 		int burnout = 0; //HP
-		float productivity = 1; //MP
+		float productivity = 1.0; //MP
+		float achivements = 0.0; //exp
 		
 	public:
 		void set_name(std::string name);
 		void set_program(std::string program);
+		std::string get_name();
 		void init_graduation_year();
 		void init_max_working_hours();
 		int get_max_hours();

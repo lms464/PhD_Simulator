@@ -9,6 +9,10 @@ void Student::set_name(std::string name_in) {
 	name = name_in;
 }
 
+std::string Student::get_name() {
+	return name;
+}
+
 void Student::set_program(std::string prog) {
 	program = prog;
 }

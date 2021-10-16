@@ -117,28 +117,117 @@ void event_effecot(Student &obj, std::string evnt) {
 
 }
 
-void Workday(Student &obj) {
+void Meeting(Student &obj) {
+
+
+	int inpt;
+	std::ostringstream ozz;;
+	ozz << "Prof: How are you doing  " << obj.get_name() << "?";
+	std::string S = ozz.str();
+	text_out(S);
+	text_out("Prof: Let's see that new data.");
+	std::cout << std::endl;
+	text_out("How is your data?");
+	std::cout<< "###################################################"<< std::endl;
+	text_out("1. Here you go!");
+	text_out("2. There was an issue...");
+	text_out("3. Ok, this is going to take a min to explain.");
+	std::cout<< "###################################################"<< std::endl;
+	std::cout<< std::endl;
+
+	std::cin >> inpt;
+	if (inpt == 1) {
+		if (randNum(-1,10)<=3) {
+			text_out("Prof: Wait wait wait... something looks wrong.. I need you to try...");
+			text_out("Your advisor goes on to describe the next two weeks of your life.");
+			obj.update_burnout(4);
+			obj.check_burnout();
+			obj.update_time(1.0);
+			std::cout<< std::endl;
+		}
+		else {
+			text_out("Your advisor looks at the new data. The two of you discuss if the analysis makes sense, and what steps might be appropriate.");
+			obj.update_time(1.0);
+			std::cout<< std::endl;
+		}
+	}
+	else if (inpt == 2) {
+		if (randNum(-1,10)<=4) {
+			text_out("Your advisor gives you a disapointed sigh.");
+			text_out("Prof: That's a shame, but I know you've been working hard.");
+			text_out("You and your advisor end the meeting early to give you more time to work");
+			obj.update_burnout(1);
+			obj.check_burnout();
+			obj.update_time(.25);
+			std::cout<< std::endl;
+		} 
+		else {
+			text_out("Your advisor looks down their nose at you. And begins to talk about what needs to be done.");
+			text_out("You are embarased and in desperate need of some coffee");
+			obj.update_burnout(4);
+			obj.check_burnout();
+			obj.update_time(1.5);
+			std::cout<< std::endl;
+		}
+	}
+	else if (inpt == 3) {
+
+		text_out("Your advisor looks at the new data, albiet confused by what you said.");
+		text_out("Prof: SO... you did this this and this?");
+		text_out("You reply in the affermative");
+		text_out("Prof: Ah, ok, I'd try doing it this way, but lets see how it looks both ways tomorrow");
+		obj.update_burnout(1);
+		obj.check_burnout();
+		obj.update_time(1.0);
+		std::cout<< std::endl;
+
+	}
+
+
+}
+
+void Workday(Student &obj, int days) {
 
 	srand(time(0)); 
 
 
 	float local_time = 0.0;
+	obj.init_time();	
 	int max_hours = obj.get_max_hours();
 	std::string S;
 	float accomplishments = 0;
 	while (local_time <= max_hours)  {
 		{
 			std::ostringstream oss;;
-			
+			if (days == 4 && local_time < 1) {
+				text_out("Don't forget about your weekly meeting today!");
+				Meeting(obj);
+			}
 			std::string evnt = event(randNum(-1,11));
 			event_effecot(obj,evnt);
 			local_time = obj.check_time();
-			oss << "Current Time: " << 1.0 * obj.check_time() << "...";
+			oss << "Hours in the day passed: " << 1.0 * obj.check_time() << "...";
 			S = oss.str();
 			text_out(S);
+			std::cout<< std::endl;
 		}
 	}
 };
+
+void Workweek(Student &obj) {
+
+	int days = 0;
+	text_out("Start of the Week.");
+	std::cout<< std::endl;
+	while (days <= 5) {
+		Workday(obj,days);
+		days = days + 1;
+		text_out("The next day.");
+
+	}
+	std::cout<< std::endl;
+	text_out("Finally, it's firday.");
+}
 
 
 int main() {
@@ -147,22 +236,7 @@ int main() {
 	int days = 0;
 	int max_time = obj1.get_max_hours();
 	std::cout << "Dawn of the First Day:" << days << std::endl;
-	while (days < 2) {
-		Workday(obj1);
-/*
-		float local_time = 0;
-		while (local_time <= max_time) {
-
-			local_time = local_time + 0.5;
-			obj1.update_time(local_time);
-			std::cout << "Current Time: " << 1.0 * obj1.check_time() << std::endl; 
-			obj1.update_burnout();
-			obj1.check_burnout();
-		}*/
-		obj1.update_days();
-		days = obj1.get_days();
-		std::cout << "Days Passed " << days << std::endl;
-	}
+	Workweek(obj1);
 	std::cout << obj1.get_burnout();
 	return 0;
 }
