@@ -2,6 +2,16 @@
 #include <iostream>
 #include "student.h"
 
+
+void Student::set_name(std::string name_in) {
+	name = name_in;
+}
+
+void Student::set_program(std::string prog) {
+	program = prog;
+}
+
+
 void Student::init_graduation_year() {
 	graduation_year = 7;
 };

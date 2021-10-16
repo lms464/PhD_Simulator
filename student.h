@@ -18,8 +18,8 @@ class Student {
 		float productivity = 1;
 		
 	public:
-		std::string set_name(std::string name);
-		std::string set_program(std::string program);
+		void set_name(std::string name);
+		void set_program(std::string program);
 		void init_graduation_year();
 		void init_max_working_hours();
 		int get_max_hours();
