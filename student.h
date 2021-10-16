@@ -9,13 +9,13 @@ class Student {
 		// variables
 		std::string name;
 		std::string program;
-		int graduation_year;
-		int max_hours_per_day;
-		int years_passed;
-		int day;
-		float time;
-		int burnout;
-		float productivity;
+		int graduation_year = 7;
+		int max_hours_per_day = 8;
+		int years_passed = 0;
+		int day = 0;
+		float time = 0.0;
+		int burnout = 0;
+		float productivity = 1;
 		
 	public:
 		std::string set_name(std::string name);
@@ -27,6 +27,7 @@ class Student {
 		int get_year();
 		void update_year();
 		void init_days();
+		void update_days();
 		void update_days(float time);
 		void update_time(float time);
 		int get_days();

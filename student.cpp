@@ -26,10 +26,20 @@ float Student::check_time() {
 	return time;
 }
 
-void Student::update_days(float loc_time) {
+void Student::update_days() {
 	if (time >= max_hours_per_day) {
 		day = day + 1;
 		if (time > max_hours_per_day) {
+			Student::update_burnout();
+		}
+		Student::init_time();
+	}
+};
+
+void Student::update_days(float local_time) {
+	if (local_time >= max_hours_per_day) {
+		day = day + 1;
+		if (local_time > max_hours_per_day) {
 			Student::update_burnout();
 		}
 		Student::init_time();
@@ -90,28 +100,4 @@ void Student::update_productivity(float prod) {
 
 float Student::get_productivity() {
 	return productivity;
-}
-
-int main() {
-	Student obj1;
-	obj1.init_graduation_year();
-	obj1.init_max_working_hours();
-	obj1.init_year();
-	obj1.init_time();
-	int days = 0;
-	int max_time = obj1.get_max_hours();
-	while (days < 7) {
-		float local_time = 0;
-		while (local_time <= max_time) {
-
-			local_time = local_time + 0.5;
-			obj1.update_time(local_time);
-			std::cout << "Current Time: " << 1.0 * obj1.check_time() << std::endl; 
-			obj1.check_burnout();
-		}
-		obj1.update_days(local_time);
-		days = obj1.get_days();
-		std::cout << "Days Passed " << days << std::endl;
-	}
-	return 0;
 }
