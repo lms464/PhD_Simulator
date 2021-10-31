@@ -2,23 +2,25 @@
 #include <iostream>
 #include <unistd.h>
 #include <sstream>
+#include <random>
 #include "student.h"
+#include "global.h"
 
 
 
-int randNum(int min, int max) {
-
-	return rand()%max + min;
-}
+int randNum() {
+	std::normal_distribution<double> event_dist(5.0,2.0);
+	return event_dist(generator);//rand()%max + min;
+};
 
 void text_out (std::string arr) {
 	// outputs text to make it look like some one is typing
 	for (int i = 0 ; i < arr.length(); i++) {
 		std::cout << arr[i] << std::flush;
-		usleep(70000);
+		usleep(50000);
 	}
 	std::cout << std::endl;
-	usleep(100000);
+	usleep(70000);
 };
 
 
@@ -49,77 +51,177 @@ void Start_Accademica(Student &obj) {
 	obj.set_program(program);
 
 };
+// make each event its own function
+void event(int randn, Student &obj) {
 
-std::string event(int randn) {
-	if (randn <= 1 ) {
-		return "unexpected meeting";
-		// unexpected meeting
-	}
-	else if (randn >=2 && randn < 8) {
-		return "Continue working";
-		// nothing
-	}
-	else if (randn >=8 && randn < 9) {
-		return "Coffee Break!";
-		// ???
-	} 
-	else if (randn >=9 && randn < 10) {
-		return "lab meeting";
-		// ???
-	} 
-	else {
-		return "unexpected visitor";
-		// ???
-	}
-}
+	// working path, should be must probable
+	if (randn >=3 && randn < 6) {
+		text_out("Continue to work.");
+		int inpt;
+		text_out("Will you read or analyze data?");
+		std::cout<< "###################################################"<< std::endl;
+		text_out("1. I need to do some reading..");
+		text_out("2. I've got to get this analysis done.");
+		std::cout<< "###################################################"<< std::endl;
+		std::cin >> inpt;
+		obj.update_time(inpt);
+		float rand_tmp = randNum();
+		if (rand_tmp == 0 || rand_tmp == 10) {
+			rand_tmp = randNum();
+			text_out("You have a eurika moment!");
+			text_out("You message your advisor the results and ");
+			text_out("your interpretation.");
+			if (rand_tmp<4) {
+				text_out("Your advisor agrees, and you plan out the next few steps");
+				obj.update_time(1.5);
+				obj.update_productivity(-.1);
+				obj.update_burnout(-1);
 
-void event_effecot(Student &obj, std::string evnt) {
-	if (evnt == "Continue working") {
-		text_out("Continue working");
-		obj.update_time(1);
-		if (randNum(-1,10)<=3) {
+			}
+			else if (rand_tmp>=4 && rand_tmp<7) {
+				text_out("Your advisor agrees with the results, however:");
+				text_out("You are missing some key statistics. It's going to be ");
+				text_out("nessisary to repeat the experiment at least two more times");
+				obj.update_time(1);
+				obj.update_productivity(-.2);
+				obj.update_burnout(1);
+			}
+			else {
+				text_out("Your advisor doesn't see the point of the analysis.");
+				obj.update_time(1);
+				obj.update_productivity(-.3);
+				obj.update_burnout(3);
+			}
+		}
+
+		// issues occur 
+		// happens a little too frequently
+		if (randNum()<=3) {
+			int inpt;
+			int desicion = 0;
 			text_out("An issue has occured with your data!");
-			obj.update_time(3);
-			obj.update_productivity(-.1);
-			obj.update_burnout(10);
+			text_out("What will you do to resolve it?");
+			// set it up so that this can only happen 3 times, then add option to ask PI
+			while (desicion == 0) {
+				std::cout<< "###################################################"<< std::endl;
+				text_out("1. Try it again, maybe it'll work this time");
+				text_out("2. Read up about the issue, back to a lit search");
+				text_out("3. Stare at it blankly");
+				if (obj.get_burnout() > 50) {
+					text_out("4. Take a step back, and get a snack.");
+				}
+				std::cout<< "###################################################"<< std::endl;
+				std::cin >> inpt;
+
+				if (inpt == 1) {
+					text_out("That didn't do anything new");
+					obj.update_productivity(-.1);
+					obj.update_burnout(1);
+				}
+				else if (inpt == 2) {
+					text_out("Yeah.. it'll take time, but this is the right choice..");
+					obj.update_time(2.5);
+					obj.update_burnout(1);
+					desicion = 4;
+				}
+
+				else if (inpt == 3) {
+					text_out("...");
+					text_out("...");
+					text_out("...");
+					text_out("...");
+					text_out("...");
+					text_out("...");
+					text_out("...");
+					text_out("...");
+					text_out("...");
+					text_out("...");
+
+				}
+				else if (obj.get_burnout() > 50 && inpt == 4) {
+					obj.update_time(.5);
+				}
+
+			}
+
+		}
+	}
+	else if (randn <=2) {
+		int inpt;
+		text_out("unexpected email");		// nothing
+		int rand_tmp = randNum();
+		if (rand_tmp >=0 && rand_tmp <= 3) {
+
+			text_out("Your PI informs you of a grant they are applying for.");
+			text_out("They need some figures from you");
+			text_out("What do you do?");
+
+			std::cout<< "###################################################"<< std::endl;
+			text_out("1. Get the plots out right away");
+			text_out("2. Inform your PI that they might not be done, and you are still working on them");
+			text_out("3. Stare at it blankly, maybe another student will pick up the work...");
+			std::cout<< "###################################################"<< std::endl;
+
+			std::cin >> inpt;
+
+			if (inpt == 2) {
+				text_out("You let your PI know that you are still working on them");
+				text_out("They inform you this is now your priorety, and need to be done.");
+				text_out("Looks like its going to be a long day..");
+				obj.update_burnout(3);
+				obj.update_time(12);
+				obj.prof_affinity_update(0.1);
+
+			}
+			else if (inpt == 1) {
+				text_out("Yeah.. it'll take time, but this is the right choice..");
+				obj.update_time(4);
+				obj.update_burnout(1);
+				obj.prof_affinity_update(0.5);
+			}
+
+			else if (inpt == 3) {
+				text_out("...");
+				text_out("...");
+				obj.prof_affinity_update(-1.0);
+				// build a probability dist that changes prof's atitude.
+			}
+			obj.check_burnout();
+
+		}
+		else {
+			text_out("You try to quickly respond, but it takes an hour to write the message right.");
+			obj.update_time(1);
 		}
 
 	}
-	else if (evnt == "unexpected meeting") {
-		obj.update_burnout(3);
+	else if (randn >67 && randn < 9) {
+		obj.update_time(0.5);
+		obj.update_burnout(-1);
 		obj.check_burnout();
-		obj.update_time(1.0);
-		obj.update_productivity(-.1);
-		text_out("unexpected meeting");
-	}
-	else if (evnt == "lab meeting") {
+		text_out("Coffee Break!");		// ???
+	} 
+	else if (randn >=9 && randn < 10) {
 		obj.update_burnout(1);
 		obj.check_burnout();
 		obj.update_time(1.0);
 		obj.update_productivity(-.1);
-		text_out("lab meeting");
-	}
-	else if (evnt == "Coffee Break!") {
-
-		obj.update_time(0.5);
-		obj.update_burnout(-1);
-		obj.check_burnout();
-		text_out("Coffee Break!");
-
-	}
-	else if (evnt == "unexpected visitor") {
+		text_out("lab meeting");		// ???
+	} 
+	else {
 		obj.update_productivity(-.1);
-		obj.update_time(randNum(-1, 3)/10);
+		obj.update_time(randNum());
 		obj.update_burnout(-1);
 		obj.check_burnout();
-		text_out("unexpected visitor");
-	}
+		text_out("unexpected visitor");		// ???
 
+	}
 }
+
 
 void Meeting(Student &obj) {
 
-
+	std::normal_distribution<double> mood(obj.get_affinity(),1.5);
 	int inpt;
 	std::ostringstream ozz;;
 	ozz << "Prof: How are you doing  " << obj.get_name() << "?";
@@ -137,22 +239,24 @@ void Meeting(Student &obj) {
 
 	std::cin >> inpt;
 	if (inpt == 1) {
-		if (randNum(-1,10)<=3) {
+		if (mood(generator)<=3) {
 			text_out("Prof: Wait wait wait... something looks wrong.. I need you to try...");
 			text_out("Your advisor goes on to describe the next two weeks of your life.");
-			obj.update_burnout(4);
+			obj.update_burnout(2);
 			obj.check_burnout();
+			obj.prof_affinity_update(-0.1);
 			obj.update_time(1.0);
 			std::cout<< std::endl;
 		}
 		else {
 			text_out("Your advisor looks at the new data. The two of you discuss if the analysis makes sense, and what steps might be appropriate.");
 			obj.update_time(1.0);
+			obj.prof_affinity_update(0.2);
 			std::cout<< std::endl;
 		}
 	}
 	else if (inpt == 2) {
-		if (randNum(-1,10)<=4) {
+		if (mood(generator)<=4) {
 			text_out("Your advisor gives you a disapointed sigh.");
 			text_out("Prof: That's a shame, but I know you've been working hard.");
 			text_out("You and your advisor end the meeting early to give you more time to work");
@@ -167,6 +271,7 @@ void Meeting(Student &obj) {
 			obj.update_burnout(4);
 			obj.check_burnout();
 			obj.update_time(1.5);
+			obj.prof_affinity_update(-0.5);
 			std::cout<< std::endl;
 		}
 	}
@@ -184,7 +289,7 @@ void Meeting(Student &obj) {
 	}
 
 
-}
+};
 
 void Workday(Student &obj, int days) {
 
@@ -203,8 +308,8 @@ void Workday(Student &obj, int days) {
 				text_out("Don't forget about your weekly meeting today!");
 				Meeting(obj);
 			}
-			std::string evnt = event(randNum(-1,11));
-			event_effecot(obj,evnt);
+			int rand_mean = int((randNum() + randNum())/2);
+			event(rand_mean, obj);
 			local_time = obj.check_time();
 			oss << "Hours in the day passed: " << 1.0 * obj.check_time() << "...";
 			S = oss.str();
@@ -227,16 +332,24 @@ void Workweek(Student &obj) {
 	}
 	std::cout<< std::endl;
 	text_out("Finally, it's firday.");
-}
+};
 
 
 int main() {
 	Student obj1;
+	std::cout << "Dawn of the First Day" << std::endl;
+	std::cout << std::endl;
 	Start_Accademica(obj1);
-	int days = 0;
-	int max_time = obj1.get_max_hours();
-	std::cout << "Dawn of the First Day:" << days << std::endl;
-	Workweek(obj1);
-	std::cout << obj1.get_burnout();
+	int years = 0;
+	while (years < 7) {
+		int weeks = 0;
+		while (weeks < 52) {
+			Workweek(obj1);
+			std::cout << obj1.get_burnout()<<std::endl;
+			std::cout << obj1.get_productivity()<<std::endl;
+			weeks = weeks + 1;
+		}
+		years = years + 1;
+	}
 	return 0;
 }

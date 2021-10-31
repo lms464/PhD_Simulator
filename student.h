@@ -17,8 +17,13 @@ class Student {
 		int burnout = 0; //HP
 		float productivity = 1.0; //MP
 		float achivements = 0.0; //exp
+		int crashes = 0;
+		float prof_affinity = 5.0; // how much your prof likes you
+							// value feeds into the normal distiribution 
+							// for a profs reaction to the student
 		
 	public:
+		//functions
 		void set_name(std::string name);
 		void set_program(std::string program);
 		std::string get_name();
@@ -43,4 +48,6 @@ class Student {
 		void init_productivity();
 		void update_productivity(float prod);
 		float get_productivity();
+		void prof_affinity_update(float affinity);
+		float get_affinity();
 };

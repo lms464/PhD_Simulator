@@ -98,6 +98,7 @@ void Student::check_burnout() {
 	if (burnout >= 100) {
 		Student::update_days(max_hours_per_day);
 		burnout = 0;
+		crashes = crashes + 1;
 	}
 }
 
@@ -116,4 +117,12 @@ void Student::update_productivity(float prod) {
 
 float Student::get_productivity() {
 	return productivity;
+}
+
+void Student::prof_affinity_update(float affinity) {
+	prof_affinity = prof_affinity + affinity;
+}
+
+float Student::get_affinity() {
+	return prof_affinity;
 }
