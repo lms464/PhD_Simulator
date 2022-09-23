@@ -1,3 +1,4 @@
+#include <fstream>
 #include <string>
 #include <iostream>
 #include "student.h"
@@ -23,7 +24,7 @@ void Student::init_graduation_year() {
 };
 
 void Student::init_max_working_hours() {
-	max_hours_per_day = 8;
+	max_hours_per_day = 3;
 };
 
 int Student::get_max_hours() {
@@ -125,4 +126,34 @@ void Student::prof_affinity_update(float affinity) {
 
 float Student::get_affinity() {
 	return prof_affinity;
+}
+
+int Student::get_crashes() {
+	return crashes;
+}
+
+void Student::set_qual() {
+	qual = true;
+}
+
+bool Student::get_qual() {
+	return qual;
+}
+
+void Student::set_master() {
+	master_out = true;
+}
+
+bool Student::get_master() {
+	return master_out;
+}
+
+void Student::write_in_lab_book() {
+	// Save your data
+	std::ofstream LabLog("Log.log");
+	LabLog << Student::get_name() << std::endl;
+	LabLog << Student::get_year() << std::endl;
+	LabLog << Student::get_burnout() << std::endl;
+	LabLog << Student::get_affinity() << std::endl;
+	LabLog.close();
 }

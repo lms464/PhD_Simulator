@@ -7,6 +7,7 @@
 #include "global.h"
 
 
+int writespeed = 50000;
 
 int randNum() {
 	std::normal_distribution<double> event_dist(5.0,2.0);
@@ -17,10 +18,10 @@ void text_out (std::string arr) {
 	// outputs text to make it look like some one is typing
 	for (int i = 0 ; i < arr.length(); i++) {
 		std::cout << arr[i] << std::flush;
-		usleep(50000);
+		usleep(writespeed);
 	}
 	std::cout << std::endl;
-	usleep(70000);
+	usleep(writespeed);
 };
 
 
@@ -51,9 +52,43 @@ void Start_Accademica(Student &obj) {
 	obj.set_program(program);
 
 };
+
+void special_event(int years, int weeks, Student &obj) {
+	if (years == 2) {
+		if (obj.get_crashes() >= 1 && weeks == 0 && obj.get_master() == false) {
+			int inpt;
+			std::string S = "You've reached full burn out in your first two years.\nWhile totally ok, please consider your mental and physical health.";
+			text_out(S);
+			S = "At this juncture, you will be given the option to 'Master out'.\nIt is not required.";
+			std::cout<< "###################################################"<< std::endl;
+			text_out("1. Master out.");
+			text_out("2. Keep going.");
+			std::cout<< "###################################################"<< std::endl;
+			std::cin >> inpt;
+			std::cout<<std::endl;
+			if (inpt == 1) {
+				text_out("Totally ok! At the end of this year your all done!");
+				obj.set_master();
+			}
+			else {
+				text_out("Alrigh. Then you need to start getting ready for your quals.");
+			}
+		}
+		if (years == 2 && weeks == 25 &&  obj.get_master()==false) {
+			text_out("It's time for you qualifying exams!");
+			text_out("Prof: Hello every one, this exam is open to the public and will happen in 3 parts.");
+			text_out("1. A verbal presentation.\n2. A closed door question and answer session.\n3. A closed door discussion with the comittee.");
+			obj.set_qual();
+			obj.update_time(3);
+			obj.update_burnout(2);
+			obj.update_productivity(-.5);
+		}
+	}
+}
+
 // make each event its own function
 void event(int randn, Student &obj) {
-
+	// the range of events should update after the qual..
 	// working path, should be must probable
 	if (randn >=3 && randn < 6) {
 		text_out("Continue to work.");
@@ -195,7 +230,7 @@ void event(int randn, Student &obj) {
 		}
 
 	}
-	else if (randn >67 && randn < 9) {
+	else if (randn >7 && randn < 9) {
 		obj.update_time(0.5);
 		obj.update_burnout(-1);
 		obj.check_burnout();
@@ -210,7 +245,7 @@ void event(int randn, Student &obj) {
 	} 
 	else {
 		obj.update_productivity(-.1);
-		obj.update_time(randNum());
+		obj.update_time(.5);
 		obj.update_burnout(-1);
 		obj.check_burnout();
 		text_out("unexpected visitor");		// ???
@@ -220,7 +255,7 @@ void event(int randn, Student &obj) {
 
 
 void Meeting(Student &obj) {
-
+	// Mood range should be able to varry as the years progress
 	std::normal_distribution<double> mood(obj.get_affinity(),1.5);
 	int inpt;
 	std::ostringstream ozz;;
@@ -317,6 +352,8 @@ void Workday(Student &obj, int days) {
 			std::cout<< std::endl;
 		}
 	}
+	std::system("clear");
+	std::system("clear");
 };
 
 void Workweek(Student &obj) {
@@ -330,20 +367,42 @@ void Workweek(Student &obj) {
 		text_out("The next day.");
 
 	}
-	std::cout<< std::endl;
+	obj.write_in_lab_book();
+	std::cout << std::endl;
 	text_out("Finally, it's firday.");
 };
 
 
-int main() {
+int main(int argc, char **argv) {
+
+	const char* logo = R"===(
+
+    			     Welcome
+    				2
+    			 GRAD SCHOOOOOOL
+    		  The gradschool simulator
+
+    )===";
+
+    std::cout << logo << std::endl;
+
 	Student obj1;
+	for (int i = 0; i < argc; ++i) {
+		if (std::string(argv[i]) == "fast") {
+			writespeed = 10;
+		}
+	}
+	Start_Accademica(obj1);
+	std::cout  << std::endl;
 	std::cout << "Dawn of the First Day" << std::endl;
 	std::cout << std::endl;
-	Start_Accademica(obj1);
 	int years = 0;
 	while (years < 7) {
 		int weeks = 0;
 		while (weeks < 52) {
+			if (years == 2) {
+				special_event(years, weeks, obj1);
+			}
 			Workweek(obj1);
 			std::cout << obj1.get_burnout()<<std::endl;
 			std::cout << obj1.get_productivity()<<std::endl;

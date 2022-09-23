@@ -21,6 +21,8 @@ class Student {
 		float prof_affinity = 5.0; // how much your prof likes you
 							// value feeds into the normal distiribution 
 							// for a profs reaction to the student
+		bool master_out = false;
+		bool qual = false;
 		
 	public:
 		//functions
@@ -50,4 +52,12 @@ class Student {
 		float get_productivity();
 		void prof_affinity_update(float affinity);
 		float get_affinity();
+		int get_crashes();
+		void set_qual();
+		bool get_qual();
+		void set_master();
+		bool get_master();
+		void write_in_lab_book();
+
+
 };
